@@ -37,13 +37,6 @@ const BlogList = () => {
 					Kegiatan
 				</button>
 				<button
-					onClick={() => setMenu("Undangan")}
-					className={
-						menu === "Undangan" ? "bg-black text-white py-1 px-4 rounded-sm" : ""
-					}>
-					Undangan
-				</button>
-				<button
 					onClick={() => setMenu("Informasi")}
 					className={
 						menu === "Informasi"
@@ -51,6 +44,15 @@ const BlogList = () => {
 							: ""
 					}>
 					Informasi
+				</button>
+				<button
+					onClick={() => setMenu("Undangan")}
+					className={
+						menu === "Undangan"
+							? "bg-black text-white py-1 px-4 rounded-sm"
+							: ""
+					}>
+					Undangan
 				</button>
 			</div>
 			<div className="flex flex-wrap justify-around gap-1 gap-y-10 mb-16 xl:mx-24">
