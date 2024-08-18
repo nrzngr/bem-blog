@@ -28,52 +28,29 @@ const BlogList = () => {
 					All
 				</button>
 				<button
-					onClick={() => setMenu("Sosial Pendidikan")}
+					onClick={() => setMenu("Kegiatan")}
 					className={
-						menu === "Sosial Pendidikan"
+						menu === "Kegiatan"
 							? "bg-black text-white py-1 px-4 rounded-sm"
 							: ""
 					}>
-					Sosial Pendidikan
+					Kegiatan
 				</button>
 				<button
-					onClick={() => setMenu("Kominfo")}
+					onClick={() => setMenu("Undangan")}
 					className={
-						menu === "Kominfo" ? "bg-black text-white py-1 px-4 rounded-sm" : ""
+						menu === "Undangan" ? "bg-black text-white py-1 px-4 rounded-sm" : ""
 					}>
-					Kominfo
+					Undangan
 				</button>
 				<button
-					onClick={() => setMenu("Minat Bakat")}
+					onClick={() => setMenu("Informasi")}
 					className={
-						menu === "Minat Bakat"
+						menu === "Informasi"
 							? "bg-black text-white py-1 px-4 rounded-sm"
 							: ""
 					}>
-					Minat Bakat
-				</button>
-				<button
-					onClick={() => setMenu("Agama")}
-					className={
-						menu === "Agama" ? "bg-black text-white py-1 px-4 rounded-sm" : ""
-					}>
-					Agama
-				</button>
-				<button
-					onClick={() => setMenu("Dalam Negeri")}
-					className={
-						menu === "Dalam Negeri"
-							? "bg-black text-white py-1 px-4 rounded-sm"
-							: ""
-					}>
-					Dalam Negeri
-				</button>
-				<button
-					onClick={() => setMenu("BPH")}
-					className={
-						menu === "BPH" ? "bg-black text-white py-1 px-4 rounded-sm" : ""
-					}>
-					BPH
+					Informasi
 				</button>
 			</div>
 			<div className="flex flex-wrap justify-around gap-1 gap-y-10 mb-16 xl:mx-24">
