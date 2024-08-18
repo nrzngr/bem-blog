@@ -94,12 +94,9 @@ const page = () => {
 					onChange={onChangeHandler}
 					value={data.category}
 					className="w-40 mt-4 px-4 py-3 border text-gray-500">
-					<option value="Sosial Pendidikan">Sosial Pendidikan</option>
-					<option value="Agama">Agama</option>
-					<option value="Dalam Negeri">Dalam Negeri</option>
-					<option value="Kominfo">Kominfo</option>
-					<option value="BPH">BPH</option>
-					<option value="Minat Bakat">Minat Bakat</option>
+					<option value="Kegiatan">Kegiatan</option>
+					<option value="Undangan">Undangan</option>
+					<option value="Informasi">Informasi</option>
 				</select>
 				<br />
 				<button type="submit" className="mt-8 w-40 h-12 bg-black text-white">
