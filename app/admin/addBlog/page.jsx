@@ -1,51 +1,85 @@
 "use client";
+
 import { assets } from "@/Assets/assets";
-import axios from "axios";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { toast } from "react-toastify";
 
 const page = () => {
-	const [image, setImage] = useState(false);
-	const [data, setData] = useState({
-		title: "",
-		description: "",
-		category: "",
-		author: "Kominfo",
-		authorImg: "/author_img.png",
-	});
+  const inputFileRef = useRef(null);
+  const [image, setImage] = useState(null);
+  const [data, setData] = useState({
+    title: "",
+    description: "",
+    category: "",
+    author: "Kominfo",
+    authorImg: "/author_img.png",
+  });
 
-	const onChangeHandler = event => {
-		const name = event.target.name;
-		const value = event.target.value;
-		setData(data => ({ ...data, [name]: value }));
-		console.log(data);
-	};
+  const onChangeHandler = (event) => {
+    const name = event.target.name;
+    const value = event.target.value;
+    setData((data) => ({ ...data, [name]: value }));
+  };
 
-	const onSubmitHandler = async e => {
-		e.preventDefault();
-		const formData = new FormData();
-		formData.append("title", data.title);
-		formData.append("description", data.description);
-		formData.append("category", data.category);
-		formData.append("author", data.author);
-		formData.append("authorImg", data.authorImg);
-		formData.append("image", image);
-		const response = await axios.post("/api/blog", formData);
-		if (response.data.success) {
-			toast.success(response.data.msg);
-			setImage(false);
-			setData({
-				title: "",
-				description: "",
-				category: "Startup",
-				author: "Kominfo",
-				authorImg: "/author_img.png",
-			});
-		} else {
-			toast.error("Error");
-		}
-	};
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
+
+    const file = inputFileRef.current.files[0];
+
+    try {
+      const response = await fetch(`/api/blog/upload?filename=${file.name}`, {
+        method: "POST",
+        body: file,
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log("Upload Result:", result);
+
+        // Assuming result.url contains the uploaded image URL
+        const imgUrl = result.url;
+
+        // Create the blog data object
+        const blogData = {
+          title: data.title,
+          description: data.description,
+          category: data.category,
+          author: data.author,
+          authorImg: data.authorImg,
+          image: imgUrl,
+        };
+
+        // Send the blog data to your main API route
+        const blogResponse = await fetch("/api/blog", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(blogData),
+        });
+
+        if (blogResponse.ok) {
+          toast.success("Blog Added");
+          setImage(null);
+          setData({
+            title: "",
+            description: "",
+            category: "Startup",
+            author: "Kominfo",
+            authorImg: "/author_img.png",
+          });
+        } else {
+          toast.error("Error creating blog post");
+        }
+      } else {
+        toast.error("Error uploading image");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error("Error uploading image");
+    }
+  };
 
 	return (
 		<>
