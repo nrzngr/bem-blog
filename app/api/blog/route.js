@@ -24,33 +24,35 @@ export async function GET(request) {
 
 // API Endpoint For Uploading Blogs
 export async function POST(request) {
-  const formData = await request.formData();
-
-  const image = formData.get('image');
-
   try {
-    const file = await storage.upload(image, {
-      directory: 'public', // Optional: Specify a subdirectory
+    const { searchParams } = new URL(request.url);
+    const filename = searchParams.get("filename");
+
+    const blob = await put(filename, request.body, {
+      access: "public",
     });
 
-    const imgUrl = file.url; // Use the URL provided by Vercel
+    const imgUrl = blob.url;
 
+    const formData = await request.formData();
     const blogData = {
-      title: `${formData.get('title')}`,
-      description: `${formData.get('description')}`,
-      category: `${formData.get('category')}`,
-      author: `${formData.get('author')}`,
+      title: formData.get("title"),
+      description: formData.get("description"),
+      category: formData.get("category"),
+      author: formData.get("author"),
       image: imgUrl, // Use the uploaded image URL
-      authorImg: `${formData.get('authorImg')}`,
+      authorImg: formData.get("authorImg"),
     };
 
     await BlogModel.create(blogData);
-    console.log("Blog Saved");
 
     return NextResponse.json({ success: true, msg: "Blog Added" });
   } catch (error) {
-    console.error('Error uploading image:', error);
-    return NextResponse.json({ success: false, msg: "Error uploading image" });
+    console.error("Error uploading blog:", error);
+    return NextResponse.json(
+      { success: false, msg: "Error uploading blog" },
+      { status: 500 }
+    );
   }
 }
 
