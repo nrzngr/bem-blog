@@ -29,9 +29,9 @@ const page = ({ params }) => {
 					<Link href="/">
 						<Image
 							src={assets.logo}
-							width={120}
+							width={60}
 							alt=""
-							className="w-[130px] sm:w-auto"
+							className="w-[60px] sm:w-auto"
 						/>
 					</Link>
 				</div>
