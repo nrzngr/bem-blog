@@ -39,7 +39,7 @@ const Page = () => {
 				title: "",
 				description: "",
 				category: "Startup",
-				author: "Alex Bennett",
+				author: "Kominfo",
 				authorImg: "/author_img.png",
 			});
 		} else {
@@ -74,7 +74,7 @@ const Page = () => {
 					value={data.title}
 					className="w-full sm:w-[500px] mt-4 px-4 py-3 border"
 					type="text"
-					placeholder="Type here"
+					placeholder="Ketik sini"
 					required
 				/>
 				<p className="text-xl mt-4">Isi Berita</p>
@@ -84,7 +84,7 @@ const Page = () => {
 					value={data.description}
 					className="w-full sm:w-[500px] mt-4 px-4 py-3 border"
 					type="text"
-					placeholder="write content here"
+					placeholder="Ketik sini"
 					rows={6}
 					required
 				/>
@@ -94,12 +94,12 @@ const Page = () => {
 					onChange={onChangeHandler}
 					value={data.category}
 					className="w-40 mt-4 px-4 py-3 border text-gray-500">
-					<option value="Sospen">Sosial Pendidikan</option>
+					<option value="Sosial Pendidikan">Sosial Pendidikan</option>
 					<option value="Agama">Agama</option>
 					<option value="Dalam Negeri">Dalam Negeri</option>
 					<option value="Kominfo">Kominfo</option>
 					<option value="BPH">BPH</option>
-					<option value="LDKM">LDKM</option>
+					<option value="Minat Bakat">Minat Bakat</option>
 				</select>
 				<br />
 				<button type="submit" className="mt-8 w-40 h-12 bg-black text-white">

@@ -11,10 +11,10 @@ const Footer = () => {
 				All right reserved. Copyright @nrzngr
 			</p>
 			<div className="flex flex-row gap-2">
-				<Link href="/">
+				<Link href="https://www.instagram.com/bem_ubsikarawang/">
 					<Image src={assets.instagram} alt="" width={50} />
 				</Link>
-				<Link href="/">
+				<Link href="https://www.tiktok.com/@bemubsi_kab.karawang">
 					<Image src={assets.tiktok} alt="" width={48} />
 				</Link>
 			</div>
