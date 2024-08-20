@@ -1,86 +1,89 @@
-// api/blog/route.js
-import { ConnectDB } from "@/lib/config/db";
+import { ConnectDB } from "@/lib/config/db"
 import BlogModel from "@/lib/models/BlogModel";
-const { NextResponse } = require("next/server");
-import { put } from "@vercel/blob";
+const { NextResponse } = require("next/server")
+import { v2 as cloudinary } from 'cloudinary';
+import { CLOUDINARY_API_KEY, CLOUDINARY_NAME, CLOUDINARY_SECRET_KEY } from "@/lib/config/cloudinary";
 
+// Configure Cloudinary 
+cloudinary.config({
+  cloud_name: CLOUDINARY_NAME,
+  api_key: CLOUDINARY_API_KEY,
+  api_secret: CLOUDINARY_SECRET_KEY
+});
+
+
+// DB Connection
 const LoadDB = async () => {
   await ConnectDB();
-};
+}
 
 LoadDB();
 
+
 // API Endpoint to get all blogs
 export async function GET(request) {
+
   const blogId = request.nextUrl.searchParams.get("id");
   if (blogId) {
     const blog = await BlogModel.findById(blogId);
     return NextResponse.json(blog);
-  } else {
+  }
+  else {
     const blogs = await BlogModel.find({});
-    return NextResponse.json({ blogs });
+    return NextResponse.json({ blogs })
   }
 }
 
+
 // API Endpoint For Uploading Blogs
-export async function POST(request) {
+export async function POST(request, response) {
+
   try {
-    const { searchParams } = new URL(request.url);
-    const filename = searchParams.get("filename");
-
-    const blob = await put(filename, request.body, {
-      access: "public",
-    });
-
-    const imgUrl = blob.url;
 
     const formData = await request.formData();
+    const image = formData.get('image');
+
+    const imageByteData = await image.arrayBuffer()
+    const mimeType = image.type
+    const encoding = "base64"
+    const buffer = Buffer.from(imageByteData).toString("base64")
+
+    const fileUri = "data:" + mimeType + ";" + encoding + "," + buffer;
+
+    const imgUpload = await cloudinary.uploader.upload(fileUri, {
+      invalidate: true,
+      resource_type: "auto",
+      filename_override: 'fileName',
+      use_filename: false,
+    });
+
     const blogData = {
-      title: formData.get("title"),
-      description: formData.get("description"),
-      category: formData.get("category"),
-      author: formData.get("author"),
-      image: imgUrl, // Use the uploaded image URL
-      authorImg: formData.get("authorImg"),
-    };
+      title: formData.get('title'),
+      description: formData.get('description'),
+      category: formData.get('category'),
+      author: formData.get('author'),
+      image: imgUpload.secure_url,
+      authorImg: formData.get('authorImg')
+    }
 
-    await BlogModel.create(blogData);
+    await BlogModel.create(blogData)
 
-    return NextResponse.json({ success: true, msg: "Blog Added" });
+    return NextResponse.json({ success: true, msg: "Blog Added" })
+
   } catch (error) {
-    console.error("Error uploading blog:", error);
-    return NextResponse.json(
-      { success: false, msg: "Error uploading blog" },
-      { status: 500 }
-    );
+
+    console.log(error);
+    return NextResponse.json({ success: true, msg: error.message })
+
   }
 }
 
 // Creating API Endpoint to delete Blog
 
 export async function DELETE(request) {
-  const id = await request.nextUrl.searchParams.get('id');
 
-  try {
-    const blog = await BlogModel.findById(id);
+  const id = await request.nextUrl.searchParams.get('id')
+  await BlogModel.findByIdAndDelete(id)
+  return NextResponse.json({ msg: "Blog Deleted" })
 
-    if (blog) {
-      // Delete the image from Vercel Storage (if applicable)
-      if (blog.image.startsWith('https://')) { // Check if it's a Vercel Storage URL
-        const imageUrlParts = blog.image.split('/');
-        const filename = imageUrlParts[imageUrlParts.length - 1];
-        await storage.delete(`public/${filename}`);
-      }
-
-      // Delete the blog document from MongoDB
-      await BlogModel.findByIdAndDelete(id);
-
-      return NextResponse.json({ msg: "Blog Deleted" });
-    } else {
-      return NextResponse.json({ msg: "Blog not found" }, { status: 404 });
-    }
-  } catch (error) {
-    console.error('Error deleting blog:', error);
-    return NextResponse.json({ msg: "Error deleting blog" }, { status: 500 });
-  }
 }
