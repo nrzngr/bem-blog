@@ -11,7 +11,7 @@ const Page = () => {
     const [data,setData] = useState({
         title:"",
         description:"",
-        category:"",
+        category:"Kegiatan",
         author:"Kominfo",
         authorImg:"/author_img.png"
     })
@@ -39,7 +39,7 @@ const Page = () => {
             setData({
               title:"",
               description:"",
-              category:"",
+              category:"Kegiatan",
               author:"Kominfo",
               authorImg:"/author_img.png"
             });
